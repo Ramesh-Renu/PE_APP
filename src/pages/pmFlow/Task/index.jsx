@@ -14,7 +14,6 @@ export const roleCheck = { role: "admin" };
 
 const TaskTable = () => {
   const [projectDetails, setProjectDetails] = useState(null);
-  const [getProjectAPI, setGetProjectAPI] = useState(false);
   const [apiLoading, setApiLoading] = useState(false);
   const { fetchProjectDetails } = useProject();
   const dispatch = useDispatch();
@@ -58,22 +57,23 @@ const TaskTable = () => {
   // Retrieve projectId dynamically from local storage
   const projectId = getProjectIdFromLocalStorage();
 
+  const getDetails = async () => {
+    try {
+      const details = await fetchProjectDetails(projectId);
+      setProjectDetails(details);
+      console.log("Fetched Project Details:", details);
+    } catch (error) {
+      console.error("Error fetching project details:", error);
+    }
+  };
   useEffect(() => {
-    if (!projectId && !getProjectAPI) {
+    if (!projectId) {
       console.error("Project ID not found in local storage");
       return;
     }
-    const getDetails = async () => {
-      try {
-        const details = await fetchProjectDetails(projectId);
-        setProjectDetails(details);
-        console.log("Fetched Project Details:", details);
-      } catch (error) {
-        console.error("Error fetching project details:", error);
-      }
-    };
+
     getDetails();
-  }, [projectId, getProjectAPI]);
+  }, [projectId]);
 
   const [data, setData] = useState([]);
   // Remove this line
@@ -288,10 +288,10 @@ const TaskTable = () => {
       }
 
       setTimeout(() => {
-        setGetProjectAPI(true);
+        console.log("settime");
+        getDetails();
         setApiLoading(false);
       }, 5000); // not [1000]
-      
     } catch (err) {
       dispatch(
         showToast({
