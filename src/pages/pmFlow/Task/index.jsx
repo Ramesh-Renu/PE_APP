@@ -9,6 +9,7 @@ import {
 import { createMileStoneTask, updateMileStoneTask } from "../../../services";
 import { showToast } from "../../../store/slice/toast";
 import { useDispatch } from "react-redux";
+import GanttChart from "../../engineerFlow/Task/Gantt";
 
 export const roleCheck = { role: "admin" };
 
@@ -21,7 +22,7 @@ const TaskTable = () => {
     useTaskStatusMasterMaster();
   const [{ projectStatusDataList }, { getProjectStatusList }] =
     useProjectStatusMaster();
-
+  const [showGantt, setShowGantt] = useState(false);
   useEffect(() => {
     if (projectStatusDataList.data.length === 0) {
       getProjectStatusList();
@@ -303,6 +304,10 @@ const TaskTable = () => {
       setApiLoading(false);
     }
   };
+  // If Gantt view is active, show the Gantt chart
+  if (showGantt) {
+    return <GanttChart milestone={data} onClose={() => setShowGantt(false)} />;
+  }
   return (
     <Fragment>
       <main className="page-add-task full-width d-flex">
@@ -337,7 +342,10 @@ const TaskTable = () => {
             </div>
             <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 pe-0">
               <div className="text-end btn-remove-add-group d-flex justify-content-end">
-                <button className="btn fs-16-500 btn-secondary border-radius-2 text-dark-gray border-0 me-0 bg-platinum-gray">
+                <button
+                  className="btn fs-16-500 btn-secondary border-radius-2 text-dark-gray border-0 me-0 bg-platinum-gray"
+                  onClick={() => setShowGantt(true)}
+                >
                   <img src={icon_gantt} className="me-2" alt="" /> Gantt
                 </button>
               </div>
