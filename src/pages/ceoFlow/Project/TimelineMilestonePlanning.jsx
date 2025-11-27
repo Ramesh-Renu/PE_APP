@@ -608,7 +608,13 @@ const TimelineMilestonePlanning = ({
                             type="text"
                             className="border-1 shadow-none bg-transparent"
                             value={item.milestone_name}
-                            readOnly
+                            onChange={(e) =>
+                              handleInternalMilestoneChange(
+                                item.milestone_id,
+                                "milestone_name",
+                                e.target.value
+                              )
+                            }
                           />
                         </td>
                         <td className="text-center text-dark-gray fs-16-500">
